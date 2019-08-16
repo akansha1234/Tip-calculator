@@ -1,105 +1,155 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Tip calculator</title>
-</head>
+	<title>
+		News App
+	</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-body{
-	 font-family: Roboto;
-  background: #8E0E00;
+h1 {
+  margin: 0;
 }
-#container{
-	height:525px;
-	width:360px;
-	margin: 100px auto;
-  background: #f7f7f7;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
 
+.typing-text::after {
+  content: "|";
+  animation: blink ease 1s infinite;
 }
-	h1{
-		background-color:  #1F030C;
-		color:white;
-		font-weight: bold;
-		font-size: 20px;
-		text-align: center;
-		padding: 13px;
-		border-top-right-radius: 20px;
-		border-top-left-radius: 20px;
-	}
-p{
-	padding-left: 20px;
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 0;
+  } 50% {
+    opacity: 1;
+  }
 }
-form input[type="text"]{
-     width:160px;
+.bg1{
+	background-color: black;
+	color: white;
+	padding:20px;
+	width:100%;
 }
-input{
-	margin-left:20px;
+.bg2{
+  margin-top: 89px;
 }
-#billamt{
-	font-size: 14px;
+#submitButton{
+	font-size: 20px;
+	padding:px;
+	color: white;
+	background-color: black;
 }
-select{
-	width:58%;
-	height:50px;
-	font-weight: bold;
-	font-size: 18px;
-	 margin-left: 20px;
+button::after{
+	border:1px solid black;
 }
-.peopleamt{
-	width:60%;
-	margin-left: 20px;
-}
-button{
-	margin-left:100px;
-	background-color:#AD133A;;
-	color:white;
-	font-weight: bold;
-	padding:12px;
-	font-size: 17px;
-}
-button:hover {
-  background: #4c2827;
-  border-bottom-color: #111;
-}
-#totalTip{
-	display: block;
-	text-align: center;
-	font-size: 30px;
+#topic{
+	font-size: 20px;
+	border:1px solid black;
 }
 </style>
+</head>
 <body>
-<div id="container">
-<h1>TIP CALCULATOR</h1>
-<div id="calculator">
-<form>
-<p>How much was your bill?</p>
-<p>
-<input type="text" name="amount" id="billamt" placeholder="Bill Amount in $">
-<p>How was your service?</p>
-<p>
-<select id="servicequal">
-<option disabled selected value="0">
-	--Choose an Option--</option>
-	<option value="0.3">30&#37; &#45;Outstanding</option>
-	<option value="0.2">20%-Good</option>
-	<option value="0.15">15%-It was Ok</option>
-	<option value="0.1">10%-Bad</option>
-	<option value="0.05">5%-Terrible</option>
-</select>
-</form>
-<p>How many people are sharing the bill?</p>
-<input type="text" name="number" id="peopleamt" placeholder="Number of People">people<br><br>
-<button type="button" id="calculate">CALCULATE!</button>
+<div class="container text-center bg1">
+<h1 class="typing-text" ></h1>
 </div>
-
-<div id="totalTip">
-<span id="tip"></span>
-<small id="each">each</small>
+<div class="container text-center bg2">
+<h2>Enter your topic</h2>
+<input type="text" name="topic name" id="topic">
+<button type="button" class="btn btn-lg" id="submitButton">Submit</button>
 </div>
-</div>
+<script>
+// get the element
+const text = document.querySelector('.typing-text');
 
-<script type="text/javascript" src="tipcalculator.js"></script>
+// make a words array
+const words = [
+  "POCKET NEWSPAPER",
+  "GET THE NEWS",
+  "ANYTIME",
+  "ANYWHERE"
+];
 
+// start typing effect
+setTyper(text, words);
+
+function setTyper(element, words) {
+
+  const LETTER_TYPE_DELAY = 75;
+  const WORD_STAY_DELAY = 2000;
+
+  const DIRECTION_FORWARDS = 0;
+  const DIRECTION_BACKWARDS = 1;
+
+  var direction = DIRECTION_FORWARDS;
+  var wordIndex = 0;
+  var letterIndex = 0;
+
+  var wordTypeInterval;
+
+  startTyping();
+
+  function startTyping() {
+    wordTypeInterval = setInterval(typeLetter, LETTER_TYPE_DELAY);
+  }
+
+  function typeLetter() {
+    const word = words[wordIndex];
+
+    if (direction == DIRECTION_FORWARDS) {
+      letterIndex++;
+
+      if (letterIndex == word.length) {
+        direction = DIRECTION_BACKWARDS;
+        clearInterval(wordTypeInterval);
+        setTimeout(startTyping, WORD_STAY_DELAY);
+      }
+
+    } else if (direction == DIRECTION_BACKWARDS) {
+      letterIndex--;
+
+      if (letterIndex == 0) {
+        nextWord();
+      }
+    }
+
+    const textToType = word.substring(0, letterIndex);
+
+    element.textContent = textToType;
+  }
+
+  function nextWord() {
+
+    letterIndex = 0;
+    direction = DIRECTION_FORWARDS;
+    wordIndex++;
+
+    if (wordIndex == words.length) {
+      wordIndex = 0;
+    }
+
+  }
+}
+
+$(document).ready(function(){
+	$("#submitButton").click(function(){
+		var topic=$("#topic").val();
+		if(topic!=""){
+var xhr = new XMLHttpRequest();
+xhr.open("GET",'https:newsapi.org/v2/everything?q='+topic+"&apiKey=c33a813718dd4c2faf411c68bebb7905",true);
+xhr.send();
+xhr.onreadystatechange=function(){
+	if(xhr.readyState==4&&xhr.status==200){
+		 var w = JSON.parse(xhr.responseText);
+document.write("<p><strong>The Description is</strong>:"+w.articles[9].description+"<br>"+"<p><strong>For more details:</strong>"+w.articles[9].url+"<p><strong>Content:</strong>"+w.articles[9].content);
+}
+	};
+}
+});
+});
+
+</script>
 </body>
 </html>
